@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+# For conda users
+.conda/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nosexy
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Environment variables (Crucial for security)
+.env
+.flaskenv
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
