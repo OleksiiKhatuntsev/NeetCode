@@ -1,6 +1,7 @@
 import heapq
 import math
-from collections import defaultdict
+import queue
+from collections import defaultdict, deque
 
 
 class KthLargest:
@@ -60,7 +61,33 @@ class Solution:
                 res_arr.append(el)
         return res_arr
 
+    def leastInterval(self, tasks: list[str], n: int) -> int:
+        heap = []
+        dict_task = defaultdict(int)
+        for task in tasks:
+            dict_task[task] += 1
+
+        for k in dict_task.keys():
+            heapq.heappush(heap, (-dict_task[k], k))
+
+        time = 0
+        q = deque()
+        while len(heap) > 0 or len(q) > 0:
+            if len(q) > 0 and q[0][1] == time:
+                heapq.heappush(heap, q[0][0])
+                q.popleft()
+            time += 1
+            if len(heap) > 0:
+                el = heapq.heappop(heap)
+                new_el = (el[0] + 1, el[1])
+                if new_el[0] < 0:
+                    q.append((new_el, time + n))
+        return time
+
+
 sol = Solution()
-print(sol.kClosest(points = [[0,2],[2,2]], k = 1))
-print(sol.kClosest(points = [[0,2],[2,0],[2,2]], k = 2))
-print(sol.kClosest(points = [[3,3],[5,-1],[-2,4]], k = 2))
+# print(sol.kClosest(points = [[0,2],[2,2]], k = 1))
+# print(sol.kClosest(points = [[0,2],[2,0],[2,2]], k = 2))
+# print(sol.kClosest(points = [[3,3],[5,-1],[-2,4]], k = 2))
+# print(sol.leastInterval(tasks = ["X","X", "Y","Y"], n = 2))
+print(sol.leastInterval(tasks = ["A","A","A","B","C"], n = 3))
