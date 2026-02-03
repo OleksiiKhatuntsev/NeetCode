@@ -1,6 +1,5 @@
 import heapq
 import math
-import queue
 from collections import defaultdict, deque
 
 
@@ -85,9 +84,85 @@ class Solution:
         return time
 
 
-sol = Solution()
+class Twitter:
+
+    def __init__(self):
+        self.order = 0
+        self.subscribes = defaultdict(set)
+        self.tweet_map = defaultdict(list)
+
+    def postTweet(self, userId: int, tweetId: int) -> None:
+        self.tweet_map[userId].append((-self.order, tweetId))
+        self.order += 1
+
+    def getNewsFeed(self, userId: int) -> list[int]:
+        result_tweets = []
+        users_to_check = self.subscribes[userId].copy()
+        users_to_check.add(userId)
+        for sub in users_to_check:
+            for tweet in self.tweet_map[sub][::-1]:
+                if len(result_tweets) > 10 and -tweet[0] < result_tweets[0][0]:
+                    break
+                heapq.heappush(result_tweets, (-tweet[0], tweet[1]))
+
+                if len(result_tweets) > 10:
+                    heapq.heappop(result_tweets)
+
+        result = []
+        while len(result_tweets) > 0:
+            result.append(heapq.heappop(result_tweets)[1])
+
+        return result[::-1]
+
+    def follow(self, followerId: int, followeeId: int) -> None:
+        self.subscribes[followerId].add(followeeId)
+
+    def unfollow(self, followerId: int, followeeId: int) -> None:
+        if followeeId in self.subscribes[followerId]:
+            self.subscribes[followerId].remove(followeeId)
+
+
+class MedianFinder:
+
+    def __init__(self):
+        self.big_heap = []
+        self.low_heap = []
+
+    def addNum(self, num: int) -> None:
+        heapq.heappush(self.low_heap, -num)
+
+        heapq.heappush(self.big_heap, -heapq.heappop(self.low_heap))
+
+        if len(self.big_heap) > len(self.low_heap):
+            heapq.heappush(self.low_heap, -heapq.heappop(self.big_heap))
+
+
+
+    def findMedian(self) -> float:
+        if len(self.big_heap) == len(self.low_heap):
+            return (self.big_heap[0] - self.low_heap[0]) / 2
+        else:
+            return -self.low_heap[0]
+# class UserTweet:
+#     def __init__(self, order, tweet_id):
+#         self.order = order
+#         self.tweet_id = tweet_id
+
+# sol = Solution()
 # print(sol.kClosest(points = [[0,2],[2,2]], k = 1))
 # print(sol.kClosest(points = [[0,2],[2,0],[2,2]], k = 2))
 # print(sol.kClosest(points = [[3,3],[5,-1],[-2,4]], k = 2))
 # print(sol.leastInterval(tasks = ["X","X", "Y","Y"], n = 2))
-print(sol.leastInterval(tasks = ["A","A","A","B","C"], n = 3))
+# print(sol.leastInterval(tasks = ["A","A","A","B","C"], n = 3))
+
+mf = MedianFinder()
+mf.addNum(1)
+print(mf.findMedian())
+mf.addNum(2)
+print(mf.findMedian())
+mf.addNum(3)
+print(mf.findMedian())
+# mf.addNum(-4)
+# print(mf.findMedian())
+# mf.addNum(-5)
+# print(mf.findMedian())
